@@ -1,0 +1,15 @@
+{
+  "name": "cinema-booking-electron",
+  "version": "1.0.0",
+  "description": "Minimal Electron app for cinema booking using SQLite",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "electron": "^25.3.1"
+  }
+}
