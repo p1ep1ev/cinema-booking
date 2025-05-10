@@ -177,6 +177,206 @@
     .btn-secondary:hover {
       opacity: 0.9;
     }
+
+    /* Стили для модального окна выбора мест */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background-color: hsl(var(--darkbg2));
+      margin: 2rem auto;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      max-width: 700px;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: hsl(var(--muted-foreground));
+    }
+
+    /* Стили для схемы зала */
+    .seat-selection-container {
+      margin-top: 1rem;
+    }
+
+    /* Стили для новой схемы кинотеатра */
+    .cinema-layout {
+      margin: 2rem auto;
+      max-width: 650px;
+      background-color: #000;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .screen {
+      background-color: #0088cc;
+      color: #000;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .rows {
+      display: grid;
+      grid-template-rows: repeat(8, auto);
+      gap: 5px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 60px repeat(11, 1fr) 60px;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+
+    .row-label {
+      background-color: #0088cc;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      border-radius: 3px;
+      padding: 5px 0;
+      font-size: 0.9rem;
+    }
+
+    .seat {
+      background-color: white;
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.8rem;
+      padding: 5px 0;
+      border: 1px solid #333;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 3px;
+    }
+
+    .seat.selected {
+      background-color: #0088cc;
+      color: white;
+    }
+
+    .seat.unavailable {
+      background-color: #333;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    .seat-empty {
+      background-color: transparent;
+    }
+
+    .booking-summary {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid hsl(var(--border));
+    }
+
+    .booking-details {
+      margin-top: 0.5rem;
+      background-color: hsl(var(--darkbg));
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .selected-seats-list {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .seat-tag {
+      background-color: hsl(var(--selected));
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+    }
+
+    .booking-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid hsl(var(--border));
+      font-weight: bold;
+    }
+
+    .btn-book {
+      margin-top: 1rem;
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+    }
+
+    .btn-book:hover {
+      opacity: 0.9;
+    }
+
+    .session-times {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .session-time {
+      padding: 0.35rem 0.75rem;
+      background-color: hsl(var(--darkbg));
+      border-radius: 0.25rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .session-time.active {
+      background-color: hsl(var(--secondary));
+    }
+
+    /* Стили для сообщения об успешной покупке */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .success-message h3 {
+      margin-bottom: 1rem;
+      color: hsl(var(--available));
+    }
+
+    .ticket-info {
+      background-color: hsl(var(--darkbg));
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    .ticket-info p {
+      margin-bottom: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -185,13 +385,14 @@
       <div class="logo">КиноБилет</div>
     </div>
   </header>
+
   <main>
     <div class="container">
       <h1 class="page-title">Фильмы в прокате</h1>
       
       <div class="movie-grid">
         <!-- Фильм 1 -->
-        <div class="movie-card">
+        <div class="movie-card" data-movie-id="1" data-movie-title="Звёздный путь" data-movie-price="300">
           <img 
             src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=900" 
             alt="Звёздный путь" 
@@ -205,12 +406,12 @@
             <div class="movie-price">
               <div>от 300 ₽</div>
             </div>
-            <button class="btn btn-secondary">КУПИТЬ БИЛЕТ</button>
+            <button class="btn btn-secondary buy-ticket-btn">КУПИТЬ БИЛЕТ</button>
           </div>
         </div>
         
         <!-- Фильм 2 -->
-        <div class="movie-card">
+        <div class="movie-card" data-movie-id="2" data-movie-title="Вечное эхо" data-movie-price="350">
           <img 
             src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=900" 
             alt="Вечное эхо" 
@@ -224,12 +425,12 @@
             <div class="movie-price">
               <div>от 350 ₽</div>
             </div>
-            <button class="btn btn-secondary">КУПИТЬ БИЛЕТ</button>
+            <button class="btn btn-secondary buy-ticket-btn">КУПИТЬ БИЛЕТ</button>
           </div>
         </div>
         
         <!-- Фильм 3 -->
-        <div class="movie-card">
+        <div class="movie-card" data-movie-id="3" data-movie-title="Шёпот ночи" data-movie-price="400">
           <img 
             src="https://images.unsplash.com/photo-1601513445506-2ab0d4fb4229?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=900" 
             alt="Шёпот ночи" 
@@ -243,12 +444,12 @@
             <div class="movie-price">
               <div>от 400 ₽</div>
             </div>
-            <button class="btn btn-secondary">КУПИТЬ БИЛЕТ</button>
+            <button class="btn btn-secondary buy-ticket-btn">КУПИТЬ БИЛЕТ</button>
           </div>
         </div>
         
         <!-- Фильм 4 -->
-        <div class="movie-card">
+        <div class="movie-card" data-movie-id="4" data-movie-title="Хроники дикой природы" data-movie-price="450">
           <img 
             src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=900" 
             alt="Хроники дикой природы" 
@@ -262,11 +463,365 @@
             <div class="movie-price">
               <div>от 450 ₽</div>
             </div>
-            <button class="btn btn-secondary">КУПИТЬ БИЛЕТ</button>
+            <button class="btn btn-secondary buy-ticket-btn">КУПИТЬ БИЛЕТ</button>
           </div>
         </div>
       </div>
     </div>
   </main>
+
+  <!-- Модальное окно выбора места -->
+  <div id="seatSelectionModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h2 id="movie-title-modal">Схема кинотеатра</h2>
+      
+      <div class="seat-selection-container">
+        <!-- Новая схема кинотеатра -->
+        <div class="cinema-layout">
+          <div class="screen">ЭКРАН</div>
+          
+          <div class="rows">
+            <div class="row">
+              <div class="row-label">Ряд 1</div>
+              <div class="seat-empty"></div>
+              <div class="seat" data-row="1" data-seat="2">2</div>
+              <div class="seat" data-row="1" data-seat="3">3</div>
+              <div class="seat" data-row="1" data-seat="4">4</div>
+              <div class="seat" data-row="1" data-seat="5">5</div>
+              <div class="seat" data-row="1" data-seat="6">6</div>
+              <div class="seat" data-row="1" data-seat="7">7</div>
+              <div class="seat" data-row="1" data-seat="8">8</div>
+              <div class="seat" data-row="1" data-seat="9">9</div>
+              <div class="seat" data-row="1" data-seat="10">10</div>
+              <div class="seat" data-row="1" data-seat="11">11</div>
+              <div class="row-label">Ряд 1</div>
+            </div>
+
+            <div class="row">
+              <div class="row-label">Ряд 2</div>
+              <div class="seat" data-row="2" data-seat="1">1</div>
+              <div class="seat" data-row="2" data-seat="2">2</div>
+              <div class="seat" data-row="2" data-seat="3">3</div>
+              <div class="seat" data-row="2" data-seat="4">4</div>
+              <div class="seat" data-row="2" data-seat="5">5</div>
+              <div class="seat" data-row="2" data-seat="6">6</div>
+              <div class="seat" data-row="2" data-seat="7">7</div>
+              <div class="seat" data-row="2" data-seat="8">8</div>
+              <div class="seat" data-row="2" data-seat="9">9</div>
+              <div class="seat" data-row="2" data-seat="10">10</div>
+              <div class="seat" data-row="2" data-seat="11">11</div>
+              <div class="row-label">Ряд 2</div>
+            </div>
+
+            <div class="row">
+              <div class="row-label">Ряд 3</div>
+              <div class="seat" data-row="3" data-seat="1">1</div>
+              <div class="seat" data-row="3" data-seat="2">2</div>
+              <div class="seat" data-row="3" data-seat="3">3</div>
+              <div class="seat" data-row="3" data-seat="4">4</div>
+              <div class="seat" data-row="3" data-seat="5">5</div>
+              <div class="seat" data-row="3" data-seat="6">6</div>
+              <div class="seat" data-row="3" data-seat="7">7</div>
+              <div class="seat" data-row="3" data-seat="8">8</div>
+              <div class="seat" data-row="3" data-seat="9">9</div>
+              <div class="seat" data-row="3" data-seat="10">10</div>
+              <div class="seat-empty"></div>
+              <div class="row-label">Ряд 3</div>
+            </div>
+
+            <div class="row">
+              <div class="row-label">Ряд 4</div>
+              <div class="seat" data-row="4" data-seat="1">1</div>
+              <div class="seat" data-row="4" data-seat="2">2</div>
+              <div class="seat" data-row="4" data-seat="3">3</div>
+              <div class="seat" data-row="4" data-seat="4">4</div>
+              <div class="seat" data-row="4" data-seat="5">5</div>
+              <div class="seat" data-row="4" data-seat="6">6</div>
+              <div class="seat" data-row="4" data-seat="7">7</div>
+              <div class="seat" data-row="4" data-seat="8">8</div>
+              <div class="seat" data-row="4" data-seat="9">9</div>
+              <div class="seat" data-row="4" data-seat="10">10</div>
+              <div class="seat-empty"></div>
+              <div class="row-label">Ряд 4</div>
+            </div>
+
+            <div class="row">
+              <div class="row-label">Ряд 5</div>
+              <div class="seat" data-row="5" data-seat="1">1</div>
+              <div class="seat" data-row="5" data-seat="2">2</div>
+              <div class="seat" data-row="5" data-seat="3">3</div>
+              <div class="seat" data-row="5" data-seat="4">4</div>
+              <div class="seat" data-row="5" data-seat="5">5</div>
+              <div class="seat" data-row="5" data-seat="6">6</div>
+              <div class="seat" data-row="5" data-seat="7">7</div>
+              <div class="seat" data-row="5" data-seat="8">8</div>
+              <div class="seat" data-row="5" data-seat="9">9</div>
+              <div class="seat" data-row="5" data-seat="10">10</div>
+              <div class="seat-empty"></div>
+              <div class="row-label">Ряд 5</div>
+            </div>
+
+            <div class="row">
+              <div class="row-label">Ряд 6</div>
+              <div class="seat" data-row="6" data-seat="1">1</div>
+              <div class="seat" data-row="6" data-seat="2">2</div>
+              <div class="seat" data-row="6" data-seat="3">3</div>
+              <div class="seat" data-row="6" data-seat="4">4</div>
+              <div class="seat" data-row="6" data-seat="5">5</div>
+              <div class="seat" data-row="6" data-seat="6">6</div>
+              <div class="seat" data-row="6" data-seat="7">7</div>
+              <div class="seat" data-row="6" data-seat="8">8</div>
+              <div class="seat" data-row="6" data-seat="9">9</div>
+              <div class="seat" data-row="6" data-seat="10">10</div>
+              <div class="seat-empty"></div>
+              <div class="row-label">Ряд 6</div>
+            </div>
+
+            <div class="row">
+              <div class="row-label">Ряд 7</div>
+              <div class="seat" data-row="7" data-seat="1">1</div>
+              <div class="seat" data-row="7" data-seat="2">2</div>
+              <div class="seat" data-row="7" data-seat="3">3</div>
+              <div class="seat" data-row="7" data-seat="4">4</div>
+              <div class="seat" data-row="7" data-seat="5">5</div>
+              <div class="seat" data-row="7" data-seat="6">6</div>
+              <div class="seat" data-row="7" data-seat="7">7</div>
+              <div class="seat" data-row="7" data-seat="8">8</div>
+              <div class="seat" data-row="7" data-seat="9">9</div>
+              <div class="seat" data-row="7" data-seat="10">10</div>
+              <div class="seat-empty"></div>
+              <div class="row-label">Ряд 7</div>
+            </div>
+
+            <div class="row">
+              <div class="row-label">Ряд 8</div>
+              <div class="seat" data-row="8" data-seat="1">1</div>
+              <div class="seat" data-row="8" data-seat="2">2</div>
+              <div class="seat" data-row="8" data-seat="3">3</div>
+              <div class="seat" data-row="8" data-seat="4">4</div>
+              <div class="seat" data-row="8" data-seat="5">5</div>
+              <div class="seat" data-row="8" data-seat="6">6</div>
+              <div class="seat" data-row="8" data-seat="7">7</div>
+              <div class="seat" data-row="8" data-seat="8">8</div>
+              <div class="seat" data-row="8" data-seat="9">9</div>
+              <div class="seat" data-row="8" data-seat="10">10</div>
+              <div class="seat" data-row="8" data-seat="11">11</div>
+              <div class="row-label">Ряд 8</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="seat-legend">
+          <div class="legend-item">
+            <div class="seat" style="width: 20px; height: 20px;"></div>
+            <span style="margin-left: 0.5rem;">Доступно</span>
+          </div>
+          <div class="legend-item">
+            <div class="seat unavailable" style="width: 20px; height: 20px;"></div>
+            <span style="margin-left: 0.5rem;">Занято</span>
+          </div>
+          <div class="legend-item">
+            <div class="seat selected" style="width: 20px; height: 20px;"></div>
+            <span style="margin-left: 0.5rem;">Выбрано</span>
+          </div>
+        </div>
+        
+        <div class="booking-summary">
+          <h3>Выбранные места:</h3>
+          <div class="booking-details">
+            <p id="movie-selected">Фильм: <span></span></p>
+            <p>Места: <span class="selected-seats-count">0</span></p>
+            <div class="selected-seats-list"></div>
+            <div class="booking-total">
+              <span>Итого:</span>
+              <span class="total-price">0 ₽</span>
+            </div>
+          </div>
+          <button class="btn btn-book" id="confirm-booking">ЗАБРОНИРОВАТЬ</button>
+        </div>
+      </div>
+      
+      <!-- Сообщение об успешной покупке -->
+      <div class="success-message" id="booking-success">
+        <h3>Билеты успешно забронированы!</h3>
+        <p>Заберите билеты в кассе кинотеатра, назвав номер бронирования.</p>
+        
+        <div class="ticket-info">
+          <p><strong>Номер бронирования:</strong> <span id="booking-number"></span></p>
+          <p><strong>Фильм:</strong> <span id="ticket-movie"></span></p>
+          <p><strong>Дата:</strong> <span id="ticket-date"></span></p>
+
+          <p><strong>Места:</strong> <span id="ticket-seats"></span></p>
+          <p><strong>Всего:</strong> <span id="ticket-total"></span></p>
+        </div>
+        
+        <button class="btn btn-secondary" id="close-success">ЗАКРЫТЬ</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Получаем элементы модального окна
+    const modal = document.getElementById('seatSelectionModal');
+    const closeBtn = document.querySelector('.close-btn');
+    const buyTicketBtns = document.querySelectorAll('.buy-ticket-btn');
+    const movieTitleModal = document.getElementById('movie-title-modal');
+    const seats = document.querySelectorAll('.seat');
+    const selectedSeatsCount = document.querySelector('.selected-seats-count');
+    const selectedSeatsList = document.querySelector('.selected-seats-list');
+    const totalPrice = document.querySelector('.total-price');
+    const movieSelected = document.getElementById('movie-selected');
+    const confirmBooking = document.getElementById('confirm-booking');
+    const bookingSuccess = document.getElementById('booking-success');
+    const closeSuccess = document.getElementById('close-success');
+    // Удалены переменные для сеансов, так как теперь показываем только схему зала
+    
+    // Текущий выбранный фильм и цена билета
+    let currentMovie = {
+      id: null,
+      title: '',
+      price: 0
+    };
+    
+    // Открываем модальное окно при нажатии на кнопку "КУПИТЬ БИЛЕТ"
+    buyTicketBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        // Получаем данные фильма из родительского элемента кнопки
+        const movieCard = btn.closest('.movie-card');
+        currentMovie.id = movieCard.dataset.movieId;
+        currentMovie.title = movieCard.dataset.movieTitle;
+        currentMovie.price = parseInt(movieCard.dataset.moviePrice);
+        
+        // Устанавливаем название фильма в модальном окне
+        movieTitleModal.textContent = `Выбор мест: ${currentMovie.title}`;
+        movieSelected.querySelector('span').textContent = currentMovie.title;
+        
+        // Сбрасываем выбранные места
+        resetSelectedSeats();
+        
+        // Отображаем модальное окно
+        modal.style.display = 'block';
+      });
+    });
+    
+    // Закрываем модальное окно при нажатии на крестик
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+      // Сбрасываем выбранные места
+      resetSelectedSeats();
+    });
+    
+    // Закрываем модальное окно при клике вне его содержимого
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+        // Сбрасываем выбранные места
+        resetSelectedSeats();
+      }
+    });
+    
+    // Удалено "Обработка выбора сеанса" - теперь показываем только схему зала
+    
+    // Обработка выбора места
+    seats.forEach(seat => {
+      seat.addEventListener('click', () => {
+        // Пропускаем недоступные места
+        if (seat.classList.contains('unavailable')) {
+          return;
+        }
+        
+        // Переключаем выбор места
+        seat.classList.toggle('selected');
+        
+        // Обновляем счётчик выбранных мест и общую сумму
+        updateSelectedSeats();
+      });
+    });
+    
+    // Обновляем информацию о выбранных местах
+    function updateSelectedSeats() {
+      const selectedSeats = document.querySelectorAll('.seat.selected');
+      
+      // Обновляем счётчик
+      selectedSeatsCount.textContent = selectedSeats.length;
+      
+      // Очищаем список выбранных мест
+      selectedSeatsList.innerHTML = '';
+      
+      // Заполняем список выбранных мест
+      selectedSeats.forEach(seat => {
+        const row = seat.dataset.row;
+        const seatNum = seat.dataset.seat;
+        const seatTag = document.createElement('div');
+        seatTag.classList.add('seat-tag');
+        seatTag.textContent = `${row}${seatNum}`;
+        selectedSeatsList.appendChild(seatTag);
+      });
+      
+      // Обновляем общую сумму
+      totalPrice.textContent = `${selectedSeats.length * currentMovie.price} ₽`;
+    }
+    
+    // Сбрасываем выбранные места
+    function resetSelectedSeats() {
+      seats.forEach(seat => {
+        if (seat.classList.contains('selected')) {
+          seat.classList.remove('selected');
+        }
+      });
+      
+      selectedSeatsCount.textContent = '0';
+      selectedSeatsList.innerHTML = '';
+      totalPrice.textContent = '0 ₽';
+    }
+    
+    // Обработка кнопки бронирования
+    confirmBooking.addEventListener('click', () => {
+      const selectedSeats = document.querySelectorAll('.seat.selected');
+      
+      // Проверяем, выбраны ли места
+      if (selectedSeats.length === 0) {
+        alert('Пожалуйста, выберите хотя бы одно место');
+        return;
+      }
+      
+      // Генерируем случайный номер бронирования
+      const bookingNumber = Math.floor(Math.random() * 1000000) + 1000000;
+      
+      // Заполняем информацию о билете
+      document.getElementById('booking-number').textContent = bookingNumber;
+      document.getElementById('ticket-movie').textContent = currentMovie.title;
+      document.getElementById('ticket-date').textContent = new Date().toLocaleDateString('ru-RU');
+      
+      // Формируем список мест
+      let seatsText = '';
+      selectedSeats.forEach((seat, index) => {
+        const row = seat.dataset.row;
+        const seatNum = seat.dataset.seat;
+        seatsText += `${row}${seatNum}`;
+        if (index < selectedSeats.length - 1) {
+          seatsText += ', ';
+        }
+      });
+      document.getElementById('ticket-seats').textContent = seatsText;
+      document.getElementById('ticket-total').textContent = `${selectedSeats.length * currentMovie.price} ₽`;
+      
+      // Скрываем форму выбора мест и показываем сообщение об успехе
+      document.querySelector('.seat-selection-container').style.display = 'none';
+      bookingSuccess.style.display = 'block';
+    });
+    
+    // Закрытие модального окна после успешного бронирования
+    closeSuccess.addEventListener('click', () => {
+      modal.style.display = 'none';
+      // Возвращаем форму в исходное состояние для будущего использования
+      document.querySelector('.seat-selection-container').style.display = 'block';
+      bookingSuccess.style.display = 'none';
+      resetSelectedSeats();
+    });
+  </script>
 </body>
 </html>
