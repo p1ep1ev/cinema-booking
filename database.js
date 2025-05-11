@@ -21,17 +21,14 @@ export const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 db.serialize(() => {
-    // Включаем поддержку внешних ключей
     db.run("PRAGMA foreign_keys = ON;");
 
-    // Удаляем старые таблицы, если они существуют
     db.run("DROP TABLE IF EXISTS tickets;");
     db.run("DROP TABLE IF EXISTS seats;");
     db.run("DROP TABLE IF EXISTS cinema_halls;");
     db.run("DROP TABLE IF EXISTS movies;");
     db.run("DROP TABLE IF EXISTS users;");
 
-    // Создание таблиц
     db.run(`
     CREATE TABLE movies (
         movie_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +52,6 @@ db.serialize(() => {
     );
   `);
 
-    // Пример вставки тестовых данных
     db.run(`
     INSERT INTO movies (title, duration, poster_url, base_price) VALUES
     ('Звёздный путь', 128, 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=900', 300),

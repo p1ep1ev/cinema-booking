@@ -18,12 +18,11 @@ let currentMovie = {
 };
 
 let currentScreeningId = null;
-let seatMap = {}; // row+number → seatId
+let seatMap = {};
 
 if (!window.api) {
     alert('API не доступно');
 }
-// Открытие модального окна
 buyTicketBtns.forEach(btn => {
     btn.addEventListener('click', async (e) => {
         e.stopPropagation();
@@ -46,7 +45,7 @@ closeBtn.addEventListener('click', async () => {
     modal.style.display = 'none';
     resetSelectedSeats();
     if (currentMovie.id) {
-        await loadSeatData(currentMovie.id); // Обновляем статус при закрытии
+        await loadSeatData(currentMovie.id);
     }
 });
 
@@ -55,12 +54,12 @@ window.addEventListener('click', async (e) => {
         modal.style.display = 'none';
         resetSelectedSeats();
         if (currentMovie.id) {
-            await loadSeatData(currentMovie.id); // Обновляем статус при закрытии
+            await loadSeatData(currentMovie.id);
         }
     }
 });
 
-// Обработка клика по месту
+
 seats.forEach(seat => {
     seat.addEventListener('click', () => {
         if (seat.classList.contains('unavailable')) return;
@@ -89,22 +88,19 @@ function resetSelectedSeats() {
     totalPrice.textContent = '0 ₽';
 }
 
-// Загрузка мест и раскраска
 async function loadSeatData(movieId) {
     try {
-        // Очищаем предыдущие статусы
         document.querySelectorAll('.seat').forEach(seat => {
             seat.classList.remove('unavailable', 'selected');
         });
 
-        // Загружаем занятые места
         const response = await window.api.getUnavailableSeats(movieId);
 
         if (!response.success) {
             throw new Error(response.error || 'Failed to load seat data');
         }
 
-        // Помечаем занятые места
+
         response.seats.forEach(seat => {
             const seatElement = document.querySelector(`.seat[data-row="${seat.row}"][data-seat="${seat.number}"]`);
             if (seatElement) {

@@ -2,7 +2,6 @@ import { app, BrowserWindow, ipcMain } from "electron"
 import { fileURLToPath } from 'url';
 import path from "path"
 import { db, getDbPath } from "./database.js";
-import os from "os";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,7 +19,6 @@ const createWindow = () => {
     }
   })
 
-  //win.removeMenu()
 
   win.loadFile('index.html')
 }
@@ -51,7 +49,6 @@ function setupDatabaseHandlers() {
   });
   ipcMain.handle('book-seat', (_, movieId, rowNumber, seatNumber) => {
     return new Promise((resolve) => {
-      // Проверка типов данных
       movieId = parseInt(movieId);
       rowNumber = parseInt(rowNumber);
       seatNumber = parseInt(seatNumber);
@@ -60,7 +57,6 @@ function setupDatabaseHandlers() {
         return resolve({ success: false, error: 'Invalid input data' });
       }
 
-      // Конвертация номера места
       let dbSeatNumber = rowNumber * 10 + seatNumber;
       if (seatNumber >= 10) {
         dbSeatNumber = rowNumber * 100 + seatNumber;

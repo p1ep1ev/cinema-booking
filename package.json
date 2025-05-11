@@ -6,11 +6,15 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "test": "cross-env NODE_ENV=test playwright test",
+    "test:ui": "cross-env NODE_ENV=test playwright test --ui",
+    "test:report": "cross-env NODE_ENV=test playwright test --reporter=html",
+    "test:ci": "cross-env NODE_ENV=test playwright test --workers=1 --reporter=dot,github"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1",
-    "sqlite3": "^5.1.6"
+    "cross-env": "^7.0.3",
+    "electron-squirrel-startup": "^1.0.1"
   },
   "type": "module",
   "devDependencies": {
@@ -22,6 +26,9 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
     "@electron-forge/plugin-fuses": "^7.8.1",
     "@electron/fuses": "^1.8.0",
-    "electron": "^36.2.0"
+    "@playwright/test": "^1.52.0",
+    "electron": "^36.2.0",
+    "playwright": "^1.52.0",
+    "sqlite3": "^5.1.7"
   }
 }
