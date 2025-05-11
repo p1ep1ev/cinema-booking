@@ -1,4 +1,4 @@
-#Cinema Booking Programm
+# Cinema Booking Programm
 
 Состав команды:
 
@@ -9,7 +9,7 @@
 Петров Иван - Fronted
 
 
-##Как развернуть проект
+## Как развернуть проект
 1.Убедитесь что установлен NodeJS версии 23+ (Electron не поддерживает развертывание из WSL, используйте Windows CMD или Linux)
 ```bash
 node --version # v23.11.0
