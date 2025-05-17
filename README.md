@@ -1,4 +1,4 @@
-# Cinema Booking Programm
+# Cinema Booking Program
 
 Состав команды:
 
